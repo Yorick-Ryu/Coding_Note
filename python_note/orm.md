@@ -31,4 +31,84 @@ class IntegerField(Field):
 ```
 下一步，就是编写最复杂的ModelMetaclass了：
 ```py
-class 
+class ModelMetaclass(type):
+    def __new__(cls, name, bases, attrs):
+        # attrs是一个字典，包含Model类及其子类的所有属性
+        # 排除掉对Model类的修改，只修改其子类
+        if name == "Model":
+            return type.__new__(cls, name, bases, attrs)
+        print('Found model: %s' % name)
+        mappings = dict()
+        # 筛选出Field属性或其子类
+        for k,v in attrs.items():
+            if isinstance(v,Field):
+                print("Found mapping: %s ==> %s" % (k,v))
+                mappings[k] = v
+        # 从子类属性中删除该Field属性，子类属性会覆盖自动生成的属性
+        for k in mappings.keys():
+            attrs.pop(k)
+        # 为Model的子类添加新属性
+        attrs['__mappings__'] = mappings # 保存属性和列的映射关系
+        attrs['__table__'] = name # 假设表名和类名一致
+        return type.__new__(cls, name, bases, attrs)
+```
+然后，编写User类的基类Model
+```py
+class Model(dict, metaclass=ModelMetaclass):
+
+    def __init__(self, **kw):
+        super(Model, self).__init__(**kw)
+
+    # 把一个类的所有属性和方法调用全部动态化处理
+    def __getattr__(self, key):
+        try:
+            # self已经是一个dict
+            return self[key]
+        except KeyError:
+            raise AttributeError(r"'Model' object has no attribute '%s'" % key)
+
+    # 生成实例化对象时调用
+    def __setattr__(self, key, value):
+        self[key] = value
+
+    def save(self):
+        fields = []
+        params = []
+        args = []
+        for k, v in self.__mappings__.items():
+            fields.append(v.name) # 等同于fields.append(k)
+            params.append('?')
+            # None这一位参数表示如果拿不到参数k，自动返回None
+            args.append(getattr(self, k, None))
+        sql = 'insert into %s (%s) values (%s)' % (self.__table__, ','.join(fields), ','.join(params))
+        print('SQL: %s' % sql)
+        print('ARGS: %s' % str(args))
+```
+最后定义User类
+```py
+class User(Model):
+    # 定义类的属性到列的映射：
+    id = IntegerField('id')
+    name = StringField('username')
+    email = StringField('email')
+    password = StringField('password')
+```
+测试：
+```py
+# 创建一个实例：
+u = User(id=12345, name='Yorick', email='test@orm.org', password='my-pwd')
+# 保存到数据库：
+u.save()
+```
+输出：
+```py
+Found model: User
+Found mapping: id ==> <IntegerField:id>
+Found mapping: name ==> <StringField:username>
+Found mapping: email ==> <StringField:email>
+Found mapping: password ==> <StringField:password>
+SQL: insert into User (id,username,email,password) values (?,?,?,?)
+ARGS: [12345, 'Yorick', 'test@orm.org', 'my-pwd']
+```
+
+完整代码：[orm.py](./orm.py)

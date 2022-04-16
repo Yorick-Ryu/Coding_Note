@@ -12,16 +12,17 @@ Yorick 同学的学习笔记
 
 ### TODO  
 
-- [ ] 静态方法与动态方法
+- [x] ~~静态方法与动态方法~~
 - [ ] ORM框架
-
+- [ ] python的魔法方法
+ 
 
 ### Yorick 同学的技术栈；
 
 #### Studying：
 
-- Java(Java Web & Android dev)
-- Python(Python web & Python crawler)
+- Java(Java Web & Android Dev)
+- Python(Python Web & Python Crawler)
 - JavaScript，HTML，CSS
 - Mysql
 - MarkDown
