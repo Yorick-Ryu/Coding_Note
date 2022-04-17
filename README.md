@@ -13,7 +13,7 @@ Yorick 同学的学习笔记
 ### TODO  
 
 - [x] ~~静态方法与动态方法~~
-- [ ] ORM框架
+- [x] ~~ORM框架~~
 - [ ] python的魔法方法
  
 
@@ -27,8 +27,9 @@ Yorick 同学的学习笔记
 - Mysql
 - MarkDown
 
-#### Ready to study
+#### Ready to study:
 
 - Kotlin
+- Node.js
 
 
