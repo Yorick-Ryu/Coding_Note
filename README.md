@@ -14,10 +14,13 @@ Yorick 同学的学习笔记
 
 - [x] ~~静态方法与动态方法~~
 - [x] ~~ORM框架~~
-- [ ] python的魔法方法
+- [x] ~~python的魔法方法~~
+- [x] ~~python的箭头函数~~
+- [ ] 修图片压缩脚本
+- [ ] python mysql 
  
 
-### Yorick 同学的技术栈；
+### Yorick 同学的技术栈：
 
 #### Studying：
 
