@@ -9,6 +9,7 @@ def newmd(name,md):
     f.close
     print("done")
 
+
 with open("test.py", "r", encoding="utf-8") as f:
     str = f.read()
 
@@ -49,6 +50,6 @@ print(mdstr)
 
 print("\n".join(mdstr))
 
-newmd("test","\n".join(mdstr))
+newmd("test1","\n".join(mdstr))
 
 
