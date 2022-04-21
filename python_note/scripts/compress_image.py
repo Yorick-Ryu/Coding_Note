@@ -15,7 +15,7 @@ def get_outfile(infile, outfile):
     outfile = '{}-out{}'.format(dir, suffix)
     return outfile
 
-def compress_image(infile, outfile='', mb=500, step=10, quality=80):
+def compress_image(infile, outfile='', mb=100, step=10, quality=80):
     """不改变图片尺寸压缩到指定大小
     :param infile: 压缩源文件
     :param outfile: 压缩文件保存地址
@@ -53,5 +53,5 @@ def resize_image(infile, outfile='', x_s=1376):
 
 if __name__ == '__main__':
     # 这里填写图片的路径和输出路径
-    compress_image(r"C:\Users\yurui\Desktop\Temp\35294660055_42c02b2316_k.jpg")
+    compress_image(r"C:\Users\yurui\Desktop\Coding_Note\python_note\scripts\compress_image.py")
    #resize_image(r'D:\learn\space.jpg')

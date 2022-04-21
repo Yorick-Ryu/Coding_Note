@@ -18,6 +18,7 @@ Yorick 同学的学习笔记
 - [x] ~~python的箭头函数~~
 - [ ] 修图片压缩脚本
 - [ ] python mysql 
+- [ ] 数据结构与算法python语言描述
  
 
 ### Yorick 同学的技术栈：
