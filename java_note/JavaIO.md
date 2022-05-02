@@ -184,9 +184,9 @@ OutputStream和Writer也非常相似:
     }
 ```
 文件复制实例：
+
+利用字节输入输出流。完成hello.txt文件的复制把该文件复制为hello2.txt
 ```java
-//利用字节输入输出流。完成hello.txt文件的复制
-//把该文件复制为hello2.txt
 @Test
 public void testCopyFile() throws IOException{
     //1。创建定位到hello.txt的文件的输入流
@@ -201,9 +201,75 @@ public void testCopyFile() throws IOException{
     while ((len =in.read(buffer)) !=-1){
         out.write(buffer,0,len);
     }
-    //5。关闭流资源
+    //5. 关闭流资源
     in.close();
     out.close();
+}
+```
+利用字符输入输出流。完成hello.txt文件的复制把该文件复制为hello2.txt
+```java
+@Test
+public void testCopyByReaderAndWriter() throws IOException {
+    //1，创建字符输入，输出流
+    Reader reader = new FileReader("hello.txt");
+    Writer writer = new FileWriter("hello2.txt");
+    //3. 创建一个字符数组。
+    char[] buffer = new char[10];
+    //4. 利用循环读取源文件，并向目标文件写入
+    //5. 注意:使用的写入的方法:write(char[] buf，int off, int len)
+    //而不能直接使用write(char[] buf)|
+    int len = 0;
+    while ((len = reader.read(buffer)) != -1) {
+        writer.write(buffer, 0, len);
+        System.out.println(len);
+    }
+    //2. 关闭流资源
+    reader.close();
+    writer.close();
+}
+```
+### 缓冲流
+文件复制
+```java
+//复制hello.txt 为 hello3.txt
+@Test
+public void testBufferedReaderAndBufferedWrite() throws IOException {
+    //1。创建 BufferedReader和 BufferedWriter
+    BufferedReader bufferedReader = new BufferedReader(new FileReader("hello.txt"));
+    BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("hello3.txt"));
+
+    //2. 进行读写操作
+    String str = null;
+
+    int i = 0;
+
+    while ((str = bufferedReader.readLine()) !=null) {
+        if (i != 0)
+            bufferedWriter.write("\n");
+        bufferedWriter.write(str);
+        i++;
+    }
+
+    //3.关闭IO流,直接关闭包装流 ，内部会关闭节点流
+    bufferedReader.close();
+    bufferedWriter.close();
+}
+```
+```java
+@Test
+public void testBufferedInputStreamAndBufferedOutputStream()throws IOException{
+    BufferedInputStream bIS = new BufferedInputStream(new FileInputStream("hello.txt"));
+    BufferedOutputStream bOT = new BufferedOutputStream(new FileOutputStream("hello4.txt"));
+
+    byte [] buffer = new byte[1024];
+    int len = 0;
+
+    while ((len = bIS.read(buffer))!= -1){
+        bOT.write(buffer,0,len);
+    }
+
+    bIS.close();
+    bOT.close();
 }
 ```
 ### RandomAccessFile类
