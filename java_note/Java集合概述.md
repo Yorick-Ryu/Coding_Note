@@ -21,6 +21,11 @@
       - [LinkedHashMap](#linkedhashmap)
       - [TreeMap](#treemap)
       - [Properties](#properties)
+    - [Collections 工具类](#collections-工具类)
+      - [排序方法](#排序方法)
+      - [查找&替换方法](#查找替换方法)
+      - [同步控制方法](#同步控制方法)
+    - [Enumeration](#enumeration)
 
 Java集合就像一种容器，可以把多个对象的引用放入容器中。  
 
@@ -471,7 +476,7 @@ password=964538
 ```java
 //1。创建一个Properties类的对象
 Properties properties = new Properties();
-//2，使用 IO 流加载对应的properties文件
+//2，使用 IO 流加载对应的properties文件，注意抛异常
 properties.load(new FileInputStream("jdbproperties"));
 //3．得到对应的属性值
 String url = properties.getProperty("url");
@@ -479,3 +484,80 @@ System.out.println(url);
 //输出：jdbc:mysql:///test
 ```
 
+
+### Collections 工具类
+
+Collections是一个操作Set、List和 Map等集合的工具类
+
+#### 排序方法
+```java
+reverse(List)
+//反转List中元素的顺序
+shuffle(List)
+//对List集合元素进行随机排序
+sort(List)
+//根据元素的自然顺序对指定List集合元秦按升序排序
+sort(List , Comparator):
+//根据指定的Comparator产生的顺序对List集合元秦进行排序
+swap(List , int , int)
+//将指定list集合中的i处元素和j处元秦进行交换
+```
+实例：
+
+根据指定的Comparator产生的顺序对List集合元秦进行排序
+```java
+Collections.sort(list, new Comparator() {
+    @Override
+    public int compare(Object o1, Object o2) {
+        Person p1 = (Person) o1;
+        Person p2 = (Person) o2;
+        return p1.getAge() - p2.getAge();
+    }
+});
+```
+#### 查找&替换方法
+
+```java
+Object max(Collection)
+//根据元素的自然顺序,返回给定集合中的最大元素
+Object max(Collection , Comparator)
+//根据Comparator指定的顺序,返回给定集合中的最大元素
+Object min(Collection)
+Object min(Collection , Comparator)
+int frequency(Collection , Object)
+//返回指疋集合甲指疋兀素的出现次数
+boolean replaceAll(List list , Object oldVal , Object newVal)
+//使用新值替换List对象的所有旧值
+```
+实例：
+
+根据Comparator指定的顺序,返回给定集合中的最大元素
+```java
+System.out.println(Collections.max(list,new Comparator() {
+    @Override
+    public int compare(Object o1, Object o2) {
+        Person p1 = (Person) o1;
+        Person p2 = (Person) o2;
+        return p1.getAge() - p2.getAge();
+    }
+}));
+```
+#### 同步控制方法
+
+使用 synchronizedList(),将参数里的集合变成线程安全的
+```java
+//获取线程安全的List 对象，使用 synchronizedList()
+List list2 = Collections.synchronizedList(new ArrayList<>());
+```
+### Enumeration
+Enumeration 接口是lterator迭代器的“古老版本”
+
+实例：
+```java
+//对Enumeration对象进行遍历 hasMoreElements() nextElement()
+Enumeration names = Collections.enumerati(list);
+while (names.hasMoreElements()){
+    Object obj = names.nextElement();
+    System.out.println(obj);
+}
+```
