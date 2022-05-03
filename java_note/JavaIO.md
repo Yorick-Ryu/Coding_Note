@@ -1,5 +1,16 @@
 # Java IO
 
+- [Java IO](#java-io)
+    - [IO概述](#io概述)
+    - [File类](#file类)
+    - [IO流分类](#io流分类)
+    - [lnputStream & Reader](#lnputstream--reader)
+    - [OutputStream & Writer](#outputstream--writer)
+    - [缓冲流](#缓冲流)
+    - [转换流](#转换流)
+    - [RandomAccessFile类](#randomaccessfile类)
+    - [对象的序列化](#对象的序列化)
+
 ### IO概述
 Java的IO流主要包括输入、输出两种IO流，每种输入输出流有可分为字节流和字符流两大类:
 
@@ -55,8 +66,8 @@ public class IOTest {
 
 按处理的单位：
 
-- 字节流(8位的字节)
-- 字符流(16位的字节)  
+- 字节流(8位的字节)，所有二进制文件通用
+- 字符流(16位的字节)，只能处理纯字符文本文件
 
 按流的角色：
 
@@ -270,6 +281,60 @@ public void testBufferedInputStreamAndBufferedOutputStream()throws IOException{
 
     bIS.close();
     bOT.close();
+}
+```
+### 转换流
+字节流和字符流相互转换
+实例一：
+```java
+@Test
+public void testInputStreamReader() throwsIOException {
+    //指向文档的字节流
+    InputStream in = new FileInputStream("hello.txt");
+    //把上面的流转为字符流
+    Reader reader = new InputStreamReader(in);
+    //把字符流转为带缓冲的字符流
+    BufferedReader bufferedReader = new BufferedReader(reader);
+    //打印文本内容
+    String str = null;
+    while ((str = bufferedReader.readLine()) != null) {
+        System.out.println(str);
+    }
+    //关闭
+    in.close();
+    reader.close();
+    bufferedReader.close();
+}
+```
+实例二：
+```java
+@Test
+public void testOutStreamReader() throws IOException {
+    //先创建两个字节输入输出流:分别指向hello.txt, hello5.txt
+    InputStream in = new FileInputStream("hello.txt");
+    OutputStream out = new FileOutputStream("hello5.txt");
+    //然后再转为字符输入输出流
+    Reader reader = new InputStreamReader(in);
+    Writer writer = new OutputStreamWriter(out);
+    //再转为带缓冲的字符输入输出流
+    BufferedReader bufferedReader = new BufferedReader(reader);
+    BufferedWriter bufferedWriter = new BufferedWriter(writer);
+    //完成文件的复制
+    int i = 0;
+    String str = null;
+    while ((str = bufferedReader.readLine()) != null) {
+        if (i != 0)
+            writer.write("\n");
+        writer.write(str);
+        i++;
+    }
+    //关闭
+    in.close();
+    reader.close();
+    bufferedReader.close();
+    bufferedWriter.close();
+    writer.close();
+    out.close();
 }
 ```
 ### RandomAccessFile类
