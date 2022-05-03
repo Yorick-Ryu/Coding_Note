@@ -14,5 +14,11 @@
 
 链接：[图片压缩脚本](./scripts/compress_image.py)
 
+### 去除java代码的缩进
 
+链接：[去除java代码的缩进](./scripts/wipeSpace.py)
+
+第一个参数为源文件全名称
+第二个参数为新文件名称
+第三个参数为缩进量，1 代表 4个空格
 
