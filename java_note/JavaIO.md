@@ -339,3 +339,133 @@ public void testOutStreamReader() throws IOException {
 ```
 ### RandomAccessFile类
 ### 对象的序列化
+对象序列化的目标是将对象保存到磁盘上，或允许在网络中直接传输对象。
+序列化是 RMI ( Remote Method Invoke-远程方法调用）过程的参数和返回值都必须实现的机制，而RMI是JavaEE的基础。因此序列化机制是JavaEE平台的基础。
+如果需要让某个对象支持序列化机制，则必须让的类是可序列化的，为了让某个类是可序列化的，该类必须实现如下两个接口之一︰
+- Serializable
+- Externalizable
+
+若某个类实现了Serializable接口，该类的对象就是可序列化的：
+- 创建一个ObjectOutputStream
+- 调用ObjectOutputStream对象的writeObiect()方法输出可序列化对象  
+  
+反序列化：
+- 创建一个ObjectInputStream
+- 调用readObject(方法读取六种的对象  
+
+如果某个类的字段不是基本数据类型或 String类型，而是另一个引用类型，那么这个引用类型必须是可序列化的，否则拥有该类型的Field的类也不能序列化
+实例：
+Person类
+```java
+import java.io.Serializable;
+
+public class Person implements Serializable {
+    
+    // 类的版本号:用于对象的序列化。具体用于读取对象时比对硬盘上对象的版本和
+    // 程序中对象的版本是否一致,若不一致读取失败，并抛出异常。
+    private static final long serialVersionUID = 8461301440305913644L;
+
+    private String name;
+    private int age;
+    private Address address;
+
+    public Person() {
+    }
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", address=" + address +
+                '}';
+    }
+}
+```
+包含字段Address，Address类也要序列化
+```java
+import java.io.Serializable;
+
+public class Address implements Serializable {
+    private static final long serialVersionUID = -1872787737087373355L;
+    private String city;
+
+    public Address(String city) {
+        this.city = city;
+    }
+
+    public Address() {
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "city='" + city + '\'' +
+                '}';
+    }
+}
+```
+序列化，将person对象写入磁盘
+```java
+@Test
+public void testSerializable() throws IOException {
+    Person person = new Person("AA", 12);
+    person.setAddress(new Address("BeiJing"));
+    //使用ObjectOutputStream 把对象写到硬盘上
+    OutputStream out = new FileOutputStream("d:\\obj.txt");
+    ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+    objectOutputStream.writeObject(person);
+    out.close();
+    objectOutputStream.close();
+}
+```
+反序列化，从磁盘读取person对象
+```java
+@Test
+public void testObjectInputStream() throws IOException, ClassNotFoundException {
+    InputStream inputStream = new FileInputStream("d:\\obj.txt");
+    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+    Object obj = objectInputStream.readObject();
+    System.out.println(obj);
+    objectInputStream.close();
+    inputStream.close();
+}
+```
+
