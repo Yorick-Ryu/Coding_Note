@@ -39,7 +39,7 @@ def wipeSpace(input, output, num=1):
 
 # 第一个参数为源文件全名称
 # 第二个参数为新文件名称
-# 第三个参数为缩进量，1 = 空格空格
+# 第三个参数为缩进量，1 = 4个空格
 wipeSpace(
     "test.txt",
     "wipespace",
