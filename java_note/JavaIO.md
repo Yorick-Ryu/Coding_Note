@@ -370,7 +370,7 @@ public void testRandomAccessFile() throws IOException {
 }
 ```
 实例二：
-向he11o.txt文件中插入一行:I Love KongFu，
+向hello.txt文件中插入一行:I Love KongFu，
 插入到第二行，原内容下移。
 ```java
 @Test
