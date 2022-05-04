@@ -338,6 +338,61 @@ public void testOutStreamReader() throws IOException {
 }
 ```
 ### RandomAccessFile类
+RandomAccessFile类既可以读取文件内容，也可以向文件输出数据。
+RandomAccessFile类支持“随机访问”的方式，程序可以直接跳到文件的任意地方来读写文件。
+
+- 支持只访问文件的部分内容
+- 可以向已存在的文件后追加内容  
+  
+RandomAccessFile对象包含一个记录指针，用以标示当前读写处的位置。RandomAccessFile类对象可以自由移动记录指针：
+
+- long getFilePointer()：获取文件记录指针的当前位置
+- void seek(long pos)：将文件记录指针定位到pos 位置
+  
+创建RandomAccessFile类可以指定一个mode参数，该参数指定RandomAccessFile的访问模式：
+- r：以只读方式打开
+- rw：以读、写方式打开  
+  
+实例一：
+```java
+@Test
+public void testRandomAccessFile() throws IOException {
+    //1.创建 RandomAccessFile类
+    RandomAccessFile accessFile = new RandomAccessFile("hello.txt", "rw");
+    //3. 对文件进行读取
+    String str = null;
+    while ((str = accessFile.readLine()) != null) {
+        System.out.println(str);
+    }
+    //4.向文件结尾写入
+    accessFile.writeBytes("www.yorick.com");
+    //2.关闭
+}
+```
+实例二：
+向he11o.txt文件中插入一行:I Love KongFu，
+插入到第二行，原内容下移。
+```java
+@Test
+public void testRandomAccessFile2() throws IOException {
+    //创建 RandomAccessFile类
+    RandomAccessFile accessFile = new RandomAccessFile("hello.txt", "rw");
+    //先读一行
+    String line = accessFile.readLine();
+    //把第一行后面的内容先读取到一个byte数组中
+    byte[] buffer = new byte[(int) (accessFile.length() - line.length())];
+    accessFile.read(buffer);
+    //移动指针到第一行的后面
+    accessFile.seek(line.length());
+    //写入字符
+    accessFile.writeBytes("\nI Love KongFu\n");
+    //写入第二行往后的内容
+    accessFile.write(buffer);
+    //关闭
+    accessFile.close();
+}
+```
+
 ### 对象的序列化
 对象序列化的目标是将对象保存到磁盘上，或允许在网络中直接传输对象。
 序列化是 RMI ( Remote Method Invoke-远程方法调用）过程的参数和返回值都必须实现的机制，而RMI是JavaEE的基础。因此序列化机制是JavaEE平台的基础。
