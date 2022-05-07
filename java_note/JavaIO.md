@@ -240,7 +240,7 @@ public void testCopyByReaderAndWriter() throws IOException {
 }
 ```
 ### 缓冲流
-文件复制
+文件复制（字符流）
 ```java
 //复制hello.txt 为 hello3.txt
 @Test
@@ -266,6 +266,7 @@ public void testBufferedReaderAndBufferedWrite() throws IOException {
     bufferedWriter.close();
 }
 ```
+缓冲字节流，最常用的文件复制方法
 ```java
 @Test
 public void testBufferedInputStreamAndBufferedOutputStream()throws IOException{
