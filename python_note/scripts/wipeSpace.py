@@ -4,7 +4,7 @@ import re, os
 # 创建新文件并输出
 def newmd(name, txt):
     path = os.getcwd()
-    test = path + "\\" + name + ".java"
+    test = path + "\\" + name
     print(test)
     f = open(test, "w", encoding="utf-8")
     f.write(txt)
@@ -38,10 +38,10 @@ def wipeSpace(input, output, num=1):
 
 
 # 第一个参数为源文件全名称
-# 第二个参数为新文件名称
-# 第三个参数为缩进量，1 = 4个空格
+# 第二个参数为新文件全名称
+# 第三个参数为缩进量，1 代表 '4个空格'
 wipeSpace(
     "test.txt",
-    "wipespace",
+    "wipespace.txt",
     1
 )
