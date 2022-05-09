@@ -30,18 +30,14 @@ def wipeSpace(input, output, num=1):
         line = line[4 * num :]
         newline.append(line)
 
-    print(newline)
+    # print(newline)
 
-    print("\n".join(newline))
+    # print("\n".join(newline))
 
     newmd(output, "\n".join(newline))
 
 
-# 第一个参数为源文件全名称
-# 第二个参数为新文件全名称
-# 第三个参数为缩进量，1 代表 '4个空格'
-wipeSpace(
-    "test.txt",
-    "wipespace.txt",
-    1
-)
+# 第一个参数: 源文件全名称
+# 第二个参数: 新文件全名称
+# 第三个参数: 缩进量，1 代表 '4个空格'
+wipeSpace("test.txt", "wipespace.txt", 1)
