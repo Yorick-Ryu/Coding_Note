@@ -5,6 +5,12 @@
     - [获取Class对象](#获取class对象)
     - [Class类的常用方法](#class类的常用方法)
     - [类加载器](#类加载器)
+  - [Method](#method)
+    - [获取Method：](#获取method)
+      - [获取类的方法](#获取类的方法)
+      - [执行类的方法](#执行类的方法)
+      - [获取类的父类](#获取类的父类)
+      - [获取父类的方法](#获取父类的方法)
 
 ## Class类
 
@@ -156,5 +162,191 @@ public void testClassLoader() throws ClassNotFoundException, FileNotFoundExcepti
     InputStream in = null;
     in = this.getClass().getClassLoader().getResourceAsStream("test.properties");
     System.out.println(in);
+}
+```
+## Method
+
+Method: 对应类中的方法。
+
+### 获取Method：
+
+#### 获取类的方法
+
+- 获取类的方法的数组: `clazz.getDeclaredMethods();`
+- 获取类的指定的方法: `getDeclaredMethod(String name, class<?>... parameterTypes)`
+name：方法名
+parameterTypes：方法的参数类型(使用Class来描述)的列表
+    ```java
+    Method method = clazz.getDeclaredMethod("setName", String.class);
+    method = clazz.getDeclaredMethod("setName", String.class, int.class);
+    ```
+
+#### 执行类的方法
+
+通过method对象执行方法：
+`public Object invoke(object obj, Object... args)`
+obj：执行哪个对象的方法?
+args：执行方法时需要传入的参数。
+
+
+实例：获取类的方法并执行
+```java
+@Test
+public void testMethod() throws Exception {
+    Class clazz = Class.forName("com.yur.java.Person");
+    //1.得到clazz对应的类中有哪些方法（无法获取私有方法）
+    Method[] methods = clazz.getMethods();
+    for (Method method : methods) {
+        System.out.println("-" + method.getName());
+    }
+    //2.获取所有的方法，包括private方法，且只获取当前类声明的方法
+    Method[] methods1 = clazz.getDeclaredMethods();
+    for (Method method : methods1) {
+        System.out.println("~" + method.getName());
+    }
+    //3.获取指定的方法
+    Method method = clazz.getDeclaredMethod("setName", String.class);
+    System.out.println(method);
+    method = clazz.getDeclaredMethod("sayHello");
+    System.out.println(method);
+    method = clazz.getDeclaredMethod("setName", String.class, int.class);
+    System.out.println(method);
+    //4.执行方法
+    Object obj = clazz.getConstructor().newInstance();
+    method.invoke(obj, "Yorick", 22);
+}
+```
+
+练习：将通过反射读取并调用类的方法封装为一个工具类
+
+Code1：接收全类名，使用`getMethod()`可读取父级方法,但是无法获取私有方法
+```java
+/**
+ * @param className:  某个类的全类名
+ * @param methodName: 类的一个方法的方法名。（包括父级方法）
+ * @param args:       调用该方法
+ * @throws Exception
+ * @return: 调用方法后的返回值
+ */
+public Object invoke(String className, String methodName, Object... args) throws Exception {
+    Class[] parameterTypes = new Class[args.length];
+    for (int i = 0; i < args.length; i++) {
+        parameterTypes[i] = args[i].getClass();
+        System.out.println(parameterTypes[i]);
+    }
+    Class clazz = Class.forName(className);
+    Method method = clazz.getMethod(methodName, parameterTypes);
+    Object obj = clazz.getConstructor().newInstance();
+    return method.invoke(obj, args);
+}
+```
+Code2：接收全类名，由类名新建一个类的对象，再调用Code3的方法
+```java
+/**
+ * @param className:  某个类的全类名
+ * @param methodName: 类的一个方法的方法名。（包括私有方法）
+ * @param args:       调用该方法
+ * @throws Exception
+ * @return: 调用方法后的返回值
+ * 该方法实际调用了下面的方法
+ */
+public Object invoke2(String className, String methodName, Object... args) throws Exception {
+   Object obj = null;
+   obj = Class.forName(className).getConstructor().newInstance();
+   invoke(obj,methodName,args);
+   return null;
+}
+```
+Code3：接收对象，使用`getDeclaredMethod()`获取方法，可获取私有方法，但是不能获取父类方法
+```java
+/**
+ * @param obj:        方法执行的那个对象.
+ * @param methodName: 类的一个方法的方法名。该方法也可能是私有方法·
+ * @param args:       调用该方法
+ * @throws Exception
+ * @return: 调用方法后的返回值
+ */
+public Object invoke(Object obj, String methodName, Object... args) throws Exception {
+    Class[] parameterTypes = new Class[args.length];
+    for (int i = 0; i < args.length; i++) {
+        parameterTypes[i] = args[i].getClass();
+        System.out.println(parameterTypes[i]);
+    }
+    Class clazz = obj.getClass();
+    Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
+    Object obj1 = clazz.getConstructor().newInstance();
+    return method.invoke(obj1, args);
+}
+```
+测试Code3：
+```java
+@Test
+public void testInvoke() throws Exception {
+    Object obj = new Person();
+    invoke(obj, "setName", "Yorick", 1);
+}
+```
+测试Code1和Code2：
+```java
+@Test
+public void testInvoke1() throws Exception {
+    invoke("com.yur.java.Person","setName", "Yorick", 10);
+    invoke2("com.yur.java.Person","setName", "Yorick", 20);
+    Object obj = invoke("java.text.SimpleDateFormat","format",new Date());
+    System.out.println(obj);
+}
+```
+#### 获取类的父类
+
+获取当前类的父类，直接调用Class对象的`getSuperclass()`方法。
+```java
+@Test
+public void testGetSuperClass() throws  Exception {
+    String className = "com.yur.java.Student";
+    Class clazz = Class.forName(className);
+    Class superClazz = clazz.getSuperclass();
+    System.out.println(superClazz);
+    //class com.yur.java.Person
+}
+```
+#### 获取父类的方法
+实例：可以获取自身或父类的方法（包括私有方法）
+```java
+/**
+ * @param className:  某个类的全类名
+ * @param methodName: 类的一个方法的方法名。（包括私有方法或者父类方法）
+ * @param args:       调用该方法
+ * @throws Exception
+ * @return: 调用方法后的返回值
+ * 该方法实际调用了下面的方法
+ */
+public Object invoke2(String className, String methodName, Object... args) throws Exception {
+    Class[] parameterTypes = new Class[args.length];
+    for (int i = 0; i < args.length; i++) {
+        parameterTypes[i] = args[i].getClass();
+        System.out.println(parameterTypes[i]);
+    }
+    Class clazz = Class.forName(className);
+    Method method = null;
+    Object obj = null;
+    for (; clazz != Object.class; clazz = clazz.getSuperclass()) {
+        try {
+            method = clazz.getDeclaredMethod(methodName, parameterTypes);
+            method.setAccessible(true);
+            obj = clazz.getConstructor().newInstance();
+        } catch (Exception e) {}
+    }
+    return method.invoke(obj, args);
+}
+```
+测试：
+```java
+@Test
+public void testInvoke2() throws Exception {
+    //Student类的method1方法被调用,打印"private void method1 " + age
+    invoke1("com.yur.java.Student", "method1", 10);
+    //Student 类的父类的method2()方法被调用，返回值为"private String method2"
+    Object result = invoke2("com.yur.java.Student", "method2");
+    System.out.println(result);
 }
 ```
