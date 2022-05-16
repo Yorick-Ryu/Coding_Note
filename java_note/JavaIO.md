@@ -83,14 +83,14 @@ InputStream和 Reader是所有输入流的基类。
 InputStream(典型实现:FileInputStream ) :
 ```java
 - int read()
-- int read(byte[ b)
-- int read(bytel b, int off, int len)
+- int read(byte[] b)
+- int read(byte[] b, int off, int len)
 ```
 Reader (典型实现:FileReader ) :
 ```java
 - int read()
-- int read(char [ c)
-- int read(char[ c, int off, int len)
+- int read(char[] c)
+- int read(char[] c, int off, int len)
 ```
 程序中打开的文件IO资源不属于内存里的资源，垃圾回收机制无法回收该资源，所以应该显式关闭文件IO资源。
 实例：
