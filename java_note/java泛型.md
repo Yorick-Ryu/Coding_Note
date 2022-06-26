@@ -46,7 +46,7 @@ for (Person person : persons) {
     System.out.println(person);
 }
 //告诉返回类型为person
-Person[] personArray = persons.toArray(nePerson[0]);
+Person[] personArray = persons.toArray(Person[0]);
 System.out.println(personArray.length);//4
 ```
 Map使用泛型
