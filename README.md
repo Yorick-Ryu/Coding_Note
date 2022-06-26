@@ -8,7 +8,9 @@ Yorick 同学的学习笔记
 
 - [python_note](./python_note/%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1.md)
 - [markdown_note](./markdown_note/MarkDownPlugins.md)
-- [java_note](./java_note/java泛型.md)
+- [data_structure](./data_structure/0_线性结构和非线性结构.md)
+- [sql_note](./sql_note/sql_note_mini.md)
+- [front_end](./front_end/AJAX/1_原生AJAX.md)
 
 
 ### TODO  
@@ -28,7 +30,7 @@ Yorick 同学的学习笔记
 
 - Java(Java Web & Android Dev)
 - Python(Python Web & Python Crawler)
-- JavaScript，HTML，CSS
+- JavaScript，HTML，CSS , Vue , AJAX
 - Mysql
 - MarkDown
 
@@ -36,5 +38,6 @@ Yorick 同学的学习笔记
 
 - Kotlin
 - Node.js
+- TypeScript
 
 
