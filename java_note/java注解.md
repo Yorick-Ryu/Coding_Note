@@ -83,7 +83,7 @@ JDK的元Annotation用于修饰其他Annotation定义
 - RetentionPolicy.RUNTIME:编译器将把注释记录在class文件中，当运行Java程序时，JVM会保留注释。程序可以通过反射获取该注释（常用）
 - RetentionPolicy.SOURCE:编译器直接丢弃这种策略的注释
 
-@Target:用于修饰Annotation定义，用于指定被修饰的Annotation能用于修饰哪些程序元素.@Target也包含一个名为value的成员变量.
+@Target：用于修饰Annotation定义，用于指定被修饰的Annotation能用于修饰哪些程序元素。@Target也包含一个名为value的成员变量。
 ```java
 //限定此注解只能修饰方法和类
 @Target(value = {ElementType.METHOD,ElementType.TYPE})
@@ -91,7 +91,7 @@ public @interface HelloAnnotation {
     public String name() default "";
 }
 ```
-@Documented:用于指定被该元Annotation修饰的Annotation类将被javadoc工具提取成文档.
-@Inherited:被它修饰的Annotation将具有继承性.如果某个类使用了被@Inherited修饰的Annotation,则其子类将自动具有该注释
+@Documented:用于指定被该元Annotation修饰的Annotation类将被javadoc工具提取成文档。
+@Inherited:被它修饰的Annotation将具有继承性。如果某个类使用了被@Inherited修饰的Annotation，则其子类将自动具有该注释
 
 
