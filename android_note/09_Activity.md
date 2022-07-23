@@ -227,6 +227,34 @@ intent.setData(uri);
 startActivity(intent);
 ```
 
+示例：**自定义隐式intent**
+
+在目标Activity的清单文件中加入`<intent-filter>`
+```xml
+<activity
+    android:name=".MainActivity"
+    android:exported="true">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+
+    <intent-filter>
+        <action android:name="android.intent.action.YUR" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+    </intent-filter>
+</activity>
+```
+进行跳转
+```java
+Intent intent = new Intent();
+intent.setAction("android.intent.action.YUR");
+intent.addCategory(Intent.CATEGORY_DEFAULT);
+startActivity(intent);
+```
+
 ### 向下一个Activity发送数据
 
 
