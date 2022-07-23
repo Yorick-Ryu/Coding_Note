@@ -227,7 +227,7 @@ intent.setData(uri);
 startActivity(intent);
 ```
 
-示例：**自定义隐式intent**
+**示例：自定义隐式  intent**
 
 在目标Activity的清单文件中加入`<intent-filter>`
 ```xml
