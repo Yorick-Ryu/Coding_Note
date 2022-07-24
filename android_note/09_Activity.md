@@ -257,9 +257,105 @@ startActivity(intent);
 
 ### 向下一个Activity发送数据
 
+Intent使用Bundle对象存放待传递的数据信息。
+Bundle对象操作各类型数据的读写方法说明见下表。
+
+| 数据类型     | 读方法             | 写方法             |
+| ------------ | ------------------ | ------------------ |
+| 整型数       | getlnt             | putlnt             |
+| 浮点数       | getFloat           | putFloat           |
+| 双精度数     | getDouble          | putDouble          |
+| 布尔值       | getBoolean         | putBoolean         |
+| 字符串       | getString          | putString          |
+| 字符串数组   | getStringArray     | putStringArray     |
+| 字符串列表   | getStringArrayList | putStringArrayList |
+| 可序列化结构 | getSerializable    | putSerializable    |
+
 
 ### 向上一个Activity返回数据
 
+请求类
+
+```java
+public class ActRequestActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private String mRequest = "你睡了吗？";
+    private ActivityResultLauncher<Intent> register;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_act_request);
+        TextView tvRequest = findViewById(R.id.tv_request);
+        tvRequest.setText("待发送的消息：" + mRequest);
+        findViewById(R.id.btn_request).setOnClickListener(this);
+        TextView tvResponse = findViewById(R.id.tv_response);
+
+        register = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result != null) {
+                Intent intent = result.getData();
+                if (intent != null && result.getResultCode() == Activity.RESULT_OK) {
+                    Bundle bundle = intent.getExtras();
+                    String response_time = bundle.getString("response_time");
+                    String response_content = bundle.getString("response_content");
+                    String desc = String.format("收到返回消息：\n返回时间为%s\n返回内容为%s", response_time, response_content);
+                    tvResponse.setText(desc);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(this, ActResponseActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("request_time", DateUtil.getCurrentTime());
+        bundle.putString("request_content", mRequest);
+        intent.putExtras(bundle);
+        register.launch(intent);
+    }
+}
+```
+
+回应类
+
+```java
+public class ActResponseActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String mResponse = "我没睡";
+
+    @Override
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_act_response);
+        TextView tvRequest = findViewById(R.id.tv_request);
+        // 获取上个Activity传的的数据
+        Bundle bundle = getIntent().getExtras();
+        String request_time = bundle.getString("request_time");
+        String request_content = bundle.getString("request_content");
+        String desc = String.format("收到请求消息：\n请求时间为%s\n请求内容为%s", request_time, request_content);
+        tvRequest.setText(desc);
+
+        findViewById(R.id.btn_response).setOnClickListener(this);
+
+        TextView tvResponse = findViewById(R.id.tv_response);
+        tvResponse.setText("待返回的消息：" + mResponse);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putString("response_time", DateUtil.getCurrentTime());
+        bundle.putString("response_content", mResponse);
+        intent.putExtras(bundle);
+        // 携带意图返回上一个页面。RESULT OK表示处理成功
+        setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+}
+```
 
 ## 为活动补充附加信息
 
