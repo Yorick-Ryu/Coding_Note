@@ -2,7 +2,7 @@
 
 ----------------------------------------
 
--  [预备知识](00_catalogue.md)
+-  [预备知识](00_预备知识.md)
 -  [文本控件(TextView)](01_文本控件.md)
 -  [视图(View)](02_视图.md)
 -  [LinearLayout](03_LinearLayout.md)
