@@ -6,6 +6,7 @@ Yorick 同学的学习笔记
 
 点击目录跳转到该分类的第一篇笔记
 
+- [android_note](./android_note/00_catalogue.md)
 - [python_note](./python_note/%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1.md)
 - [markdown_note](./markdown_note/MarkDownPlugins.md)
 - [data_structure](./data_structure/0_线性结构和非线性结构.md)
