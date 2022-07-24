@@ -2,8 +2,9 @@
 
 ----------------------------------------
 
-- [文本控件（TextView）](01_文本控件.md)
--  [视图（View）](02_视图.md)
+-  [预备知识](00_catalogue.md)
+-  [文本控件(TextView)](01_文本控件.md)
+-  [视图(View)](02_视图.md)
 -  [LinearLayout](03_LinearLayout.md)
 -  [RelativeLayout](04_RelativeLayout.md)
 -  [GridLayout](05_GridLayout.md)
