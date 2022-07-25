@@ -23,6 +23,9 @@
   - [为活动补充附加信息](#为活动补充附加信息)
     - [利用资源文件配置字符串](#利用资源文件配置字符串)
     - [利用元数据传递配置信息](#利用元数据传递配置信息)
+      - [什么是元数据](#什么是元数据)
+      - [元数据应用场景](#元数据应用场景)
+      - [获取元数据信息](#获取元数据信息)
     - [给应用页面注册快捷方式](#给应用页面注册快捷方式)
 
 
@@ -361,7 +364,136 @@ public class ActResponseActivity extends AppCompatActivity implements View.OnCli
 
 
 ### 利用资源文件配置字符串
+
+示例：
+
+```java
+String value = getString(R.string.weather_str);
+tv_resource.setText(value);
+```
+
+优点： 无需编译，使用灵活。
+
 ### 利用元数据传递配置信息
+
+#### 什么是元数据
+
+放在清单文件里的数据
+
+```xml
+<activity
+    android:name=".MetaDataActivity"
+    android:exported="false">
+    <meta-data
+        android:name="MetaDate"
+        android:value="Hello Meta" />
+</activity>
+```
+
+#### 元数据应用场景
+
+调用第三方SDK是，使用token进行身份验证
+
+#### 获取元数据信息
+
+在Java代码中，获取元数据信息的步骤分为下列三步：
+- 调用`getPackageManager`方法获得当前应用的包管理器；
+- 调用包管理器的`getActivitylnfo`方法获得当前活动的信息对象；
+- 活动信息对象的`metaData`是`Bundle`包裹类型，调用包裹对象的`getString`即可获得指定名称的参数值；
+
+```java
+TextView tvMeta = findViewById(R.id.tv_meta);
+// 获取应用包管理器
+PackageManager pm = getPackageManager();
+try {
+    // 从应用包管理器中获取当前的活动信息
+    ActivityInfo info = pm.getActivityInfo(getComponentName(), PackageManager.GET_META_DATA);
+    // 获取活动附加的元数据信息
+    Bundle metaData = info.metaData;
+    String metaDate = metaData.getString("MetaDate");
+    tvMeta.setText(metaDate);
+} catch (PackageManager.NameNotFoundException e) {
+    e.printStackTrace();
+}
+```
+
 ### 给应用页面注册快捷方式
 
+元数据不仅能传递简单的字符串参数，还能传送更复杂的资源数据，比如实现应用的快捷方式菜单。
 
+**示例：**
+清单文件：
+```xml
+<activity
+    android:name=".ButtonClickActivity"
+    android:exported="true">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+    <meta-data
+        android:name="android.app.shortcuts"
+        android:resource="@xml/shortcuts" />
+</activity>
+```
+在res目录下新建xml文件夹，里面新建`shortcuts.xml`，注意所有字符串要在`value/string.xml`文件里注册，
+
+`shortcuts.xml`代码示例：
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutId="first"
+        android:shortcutLongLabel="@string/long_1"
+        android:shortcutShortLabel="@string/short_1">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.yorick.chapter03.ViewGravityActivity"
+            android:targetPackage="com.yorick.chapter03" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutId="second"
+        android:shortcutLongLabel="@string/long_2"
+        android:shortcutShortLabel="@string/short_2">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.yorick.chapter03.GridLayoutActivity"
+            android:targetPackage="com.yorick.chapter03" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutId="third"
+        android:shortcutLongLabel="@string/long_3"
+        android:shortcutShortLabel="@string/short_3">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.yorick.chapter03.RelativeLayoutActivity"
+            android:targetPackage="com.yorick.chapter03" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>
+```
+`string.xml`代码示例：
+```xml
+<resources>
+    <string name="app_name">chapter03</string>
+    <string name="hello">Hello,World!</string>
+    <string name="short_1">first</string>
+    <string name="long_1">重力视图</string>
+    <string name="short_2">short</string>
+    <string name="long_2">网格视图</string>
+    <string name="short_3">third</string>
+    <string name="long_3">相对视图</string>
+</resources>
+```
