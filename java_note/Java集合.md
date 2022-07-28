@@ -407,7 +407,7 @@ for (Object val : values) {
     System.out.println(val);
 }
 //2.3得到键值对的集合
-for (Map.Entry<String, Object> entry : maentrySet()) {
+for (Map.Entry<String, Object> entry : map.entrySet()) {
     String key = entry.getKey();
     Object val = entry.getValue();
     System.out.println(key + ": " + val);
