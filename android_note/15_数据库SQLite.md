@@ -161,9 +161,11 @@ public class UserDBHelper extends SQLiteOpenHelper {
     // 更新数据库
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        String sql = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN phone VARCHAR";
+        db.execSQL(sql);
+        sql = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN password VARCHAR";
+        db.execSQL(sql);
     }
-
     public long insert(User user) {
         ContentValues values = new ContentValues();
         values.put("name", user.name);
