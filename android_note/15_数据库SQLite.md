@@ -44,7 +44,7 @@ SQLite语法与其他数据库的SQL语法有所出入，相关的注意点说�
 
 记录的添加动作由insert命令完成，格式为"INSERT INTO 表格名称(以逗号分隔的字段名列表) VALUES (以逗号分隔的字段值列表);"。下面是往用户信息表插入一条记录的SQL语句例子:
 ```sql
-INSERT INTo user_info (name,age,height,weight,married,update_time) VALUES ('张三',20,170,50,0,'20200504');
+INSERT INTO user_info (name,age,height,weight,married,update_time) VALUES ('张三',20,170,50,0,'20200504');
 ```
 （2）删除记录
 
