@@ -91,7 +91,153 @@ SQLiteDatabase是SQLite的数据库管理类，它提供了若干操作数据表
 
 ## 数据库帮助器SQLiteOpenHelper
 
+示例：
 
+```java
+public class UserDBHelper extends SQLiteOpenHelper {
+
+    private static final String DB_NAME = "user.db";
+    private static final String TABLE_NAME = "user_info";
+    private static final int DB_VERSION = 1;
+    private static UserDBHelper mHelper = null;
+    private SQLiteDatabase mRDB = null;
+    private SQLiteDatabase mWDB = null;
+
+    private UserDBHelper(Context context) {
+        super(context, DB_NAME, null, DB_VERSION);
+    }
+
+    // 使用单例模式获取唯一实例
+    public static UserDBHelper getInstance(Context context) {
+        if (mHelper == null) {
+            mHelper = new UserDBHelper(context);
+        }
+        return mHelper;
+    }
+
+    // 打开数据库的读连接
+    public SQLiteDatabase openReadLink() {
+        if (mRDB == null || !mRDB.isOpen()) {
+            mRDB = mHelper.getReadableDatabase();
+        }
+        return mRDB;
+    }
+
+    // 打开数据库的写连接
+    public SQLiteDatabase openWriteLink() {
+        if (mWDB == null || !mWDB.isOpen()) {
+            mWDB = mHelper.getReadableDatabase();
+        }
+        return mWDB;
+    }
+
+    // 关闭数据库连接
+    public void closeLink() {
+        if (mRDB != null && mRDB.isOpen()) {
+            mRDB.close();
+            mRDB = null;
+        }
+
+        if (mWDB != null && mWDB.isOpen()) {
+            mWDB.close();
+            mWDB = null;
+        }
+    }
+
+    // 创建数据库，执行建表语句
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (\n" +
+                "  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
+                "  NAME VARCHAR NOT NULL,\n" +
+                "  gender INTEGER NOT NULL,\n" +
+                "  age INTEGER NOT NULL,\n" +
+                "  height LONG NOT NULL,\n" +
+                "  weight FLOAT NOT NULL,\n" +
+                "  update_time VARCHAR NOT NULL);";
+        db.execSQL(sql);
+    }
+
+    // 更新数据库
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+    public long insert(User user) {
+        ContentValues values = new ContentValues();
+        values.put("name", user.name);
+        values.put("age", user.age);
+        values.put("gender", user.gender);
+        values.put("weight", user.weight);
+        values.put("height", user.height);
+        values.put("update_time", DateUtil.getCurrentTime());
+        return mWDB.insert(TABLE_NAME, null, values);
+
+        // 事务示例，同生共死
+//        try {
+//            mWDB.beginTransaction();
+//            mWDB.insert(TABLE_NAME, null, values);
+//            int i = 10/0
+//            mWDB.insert(TABLE_NAME, null, values);
+//            mWDB.setTransactionSuccessful();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            mWDB.endTransaction();
+//        }
+    }
+
+    public long deleteByName(String name) {
+        // 删除所有
+        // mWDB.delete(TABLE_NAME, "1=1", null);
+        return mWDB.delete(TABLE_NAME, "name=?", new String[]{name});
+    }
+
+    public long update(User user) {
+        ContentValues values = new ContentValues();
+        values.put("name", user.name);
+        values.put("age", user.age);
+        values.put("gender", user.gender);
+        values.put("weight", user.weight);
+        values.put("height", user.height);
+        values.put("update_time", DateUtil.getCurrentTime());
+        return mWDB.update(TABLE_NAME, values, "name=?", new String[]{user.name});
+    }
+
+    public List<User> queryAll() {
+        List<User> users = new ArrayList<>();
+        Cursor cursor = mRDB.query(TABLE_NAME, null, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            User user = new User();
+            user.id = cursor.getInt(0);
+            user.name = cursor.getString(1);
+            user.gender = cursor.getInt(2);
+            user.age = cursor.getInt(3);
+            user.height = cursor.getLong(4);
+            user.weight = cursor.getFloat(5);
+            users.add(user);
+        }
+        return users;
+    }
+
+    public List<User> queryByName(String name) {
+        List<User> users = new ArrayList<>();
+        Cursor cursor = mRDB.query(TABLE_NAME, null, "name=?", new String[]{name}, null, null, null);
+        while (cursor.moveToNext()) {
+            User user = new User();
+            user.id = cursor.getInt(0);
+            user.name = cursor.getString(1);
+            user.gender = cursor.getInt(2);
+            user.age = cursor.getInt(3);
+            user.height = cursor.getLong(4);
+            user.weight = cursor.getFloat(5);
+            users.add(user);
+        }
+        return users;
+    }
+}
+```
 
 ## 优化记住密码功能
 
