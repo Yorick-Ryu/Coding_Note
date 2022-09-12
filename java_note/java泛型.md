@@ -104,7 +104,7 @@ c.add(null);//只能放null
 ```java
 //工具方法，打印Person信息
 //List<? extends Person代表可以放入所有Person的子类
-public static void printPersonInfo(List<? extends Person> persons) {
+public static void printPersonInfo(List<?> extends Person> persons) {
     //不能放，只能取
     for (Person person : persons) {
         System.out.println(person);
