@@ -198,10 +198,9 @@ Thread_1 : 33
 
 Runnable接口中只有一个未实现的run方法，实现该接口的类必须重写该方法。
 
-Runnable接口Thread类之间的区别
+Runnable接口和Thread类之间的区别
 
-- Runnable接口必须实现run方法，而Thread类中的
-run方法是一个空方法，可以不重写
+- Runnable接口必须实现run方法，而Thread类中的run方法是一个空方法，可以不重写
 - Runnable接口的实现类并不是真正的线程类，只是线程运行的目标类。要想以线程的方式执行run方法，必须依靠Thread类
 - **Runnable接口适合于资源的共享**
 
