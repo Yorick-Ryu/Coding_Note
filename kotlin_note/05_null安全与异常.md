@@ -31,9 +31,7 @@ fun main() {
 }
 ```
 
-<!-- ### Kotlin的null类型
-
-### 编译时间与运行时间 -->
+<!-- ### Kotlin的null类型 ### 编译时间与运行时间 -->
 
 ### null安全
 
@@ -193,6 +191,4 @@ fun checkOperation(number: Int?) {
 | error          | 如果参数为null，则抛出IllegalStateException异常并输出错误信息，否则返回非null值 |
 | assert         | 如果参数为false，则抛出AssertError异常，并打上断言编译器标记                  |
 
-<!-- ### 已检查异常和未检查异常
-
-### 可空性如何保证 -->
+<!-- ### 已检查异常和未检查异常 ### 可空性如何保证 -->
