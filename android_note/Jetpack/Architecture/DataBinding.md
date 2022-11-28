@@ -129,11 +129,16 @@ DataBinding是Google提供给我们的数据绑定的支持库，实现在页面
      - 在`MainActivity`使用`DataBindingUtils`加载布局，这里使用了懒加载，即随用随加载。
 
        ```kotlin
-       private val myViewModel by lazy { ViewModelProvider(this)[MyViewModel::class.java] }
+       private val binding: ActivityMainBinding by lazy {
+           DataBindingUtil.setContentView(
+               this,
+               R.layout.activity_main
+           )
+       }
        ```
-
+     
      - `inflate`加载布局（此方法也能用于`RecyclerView`, `ViewPager`）
-
+     
        ```kotlin
        class MainActivity : AppCompatActivity() {
            private val myViewModel by lazy { ViewModelProvider(this)[MyViewModel::class.java] }
@@ -146,11 +151,33 @@ DataBinding是Google提供给我们的数据绑定的支持库，实现在页面
            }
        }
        ```
-
+     
      上述两种方法大家二选一，一般在`Activity`中我们都用第一种。
-
+     
+     如果在fragment中绑定布局
+     
+     ```kotlin
+     class MasterFragment : Fragment() {
+     
+         override fun onCreateView(
+             inflater: LayoutInflater, container: ViewGroup?,
+             savedInstanceState: Bundle?
+         ): View {
+             val viewModel = ViewModelProvider(requireActivity())[MyViewModel::class.java]
+             val binding = DataBindingUtil.inflate<FragmentMasterBinding>(
+                 inflater,
+                 R.layout.fragment_master,
+                 container,
+                 false
+             )
+             binding.data = viewModel
+             binding.lifecycleOwner = requireActivity()
+             return binding.root
+     }
+     ```
+     
      然后在`MainActivity`的`onCreate`方法添加Observe和按钮点击事件
-
+     
      ```kotlin
      myViewModel.number.observe(this) {
      	binding.textView.text = it.toString()
@@ -176,7 +203,7 @@ DataBinding是Google提供给我们的数据绑定的支持库，实现在页面
      修改TextView的text属性：
    
      ```xml
-     android:text="@{data.number}"
+     android:text="@{data.number.toString()}"
      ```
      Button增加onClick属性：
      
